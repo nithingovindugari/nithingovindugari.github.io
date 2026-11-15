@@ -3,14 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Nithin Reddy</title>
-<meta name="description" content="Nithin Reddy trains models and builds agents: RL, reward design, evals and data. Work, writing and how to reach him.">
-<meta property="og:title" content="Nithin Reddy">
-<meta property="og:description" content="Nithin Reddy trains models and builds agents: RL, reward design, evals and data. Work, writing and how to reach him.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://nithingovindugari.com/">
+<title>The LLM inference bottleneck moved twice · Nithin Reddy Govindugari</title>
+<meta name="description" content="First the KV cache, then prefill and decode. Both fixes were software. An article by Nithin Reddy Govindugari.">
+<meta name="author" content="Nithin Reddy Govindugari">
+<link rel="canonical" href="https://nithingovindugari.com/writing/inference-bottleneck-moved-twice/">
+<meta property="og:site_name" content="Nithin Reddy Govindugari">
+<meta property="og:title" content="The LLM inference bottleneck moved twice · Nithin Reddy Govindugari">
+<meta property="og:description" content="First the KV cache, then prefill and decode. Both fixes were software. An article by Nithin Reddy Govindugari.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://nithingovindugari.com/writing/inference-bottleneck-moved-twice/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@NithinRocks17">
 <meta name="theme-color" content="#000000">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23000'/%3E%3Ccircle cx='20' cy='20' r='16' fill='none' stroke='%23fff' stroke-width='2.4'/%3E%3Cpath d='M20 30V15M20 21c-5 0-7-3-7-7 5 0 7 3 7 7zm0-3c5 0 7-3 7-7-5 0-7 3-7 7z' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linejoin='round'/%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Person", "name": "Nithin Reddy Govindugari", "alternateName": "Nithin Reddy", "url": "https://nithingovindugari.com/", "jobTitle": "Senior AI Engineer", "description": "Nithin Reddy Govindugari is a Senior AI and ML Engineer with experience in core AI research and post-training of models: reinforcement learning, reward design, evals, training data and multi-agent systems.", "worksFor": {"@type": "Organization", "name": "Kasisto"}, "alumniOf": {"@type": "CollegeOrUniversity", "name": "San Jose State University"}, "knowsAbout": ["Artificial intelligence", "Machine learning", "AI research", "LLM post-training", "Reinforcement learning", "Reward design", "Model evaluation", "AI agents", "Multi-agent systems", "Quantum machine learning", "GPU kernels", "VLSI"], "sameAs": ["https://www.linkedin.com/in/nithin-reddy-6543a811a/", "https://github.com/nithingovindugari", "https://x.com/NithinRocks17", "https://huggingface.co/NithinReddyG"]}</script>
 <style>
 /* Layout: one black screen per page, never a long scroll. A particle cloud is the constant; it
    takes a different form on each page and morphs between them. Thin monospace UI around it.
@@ -36,6 +42,7 @@ button{font:inherit;color:inherit;text-transform:inherit;letter-spacing:inherit;
 p{margin:0}
 [hidden]{display:none!important}
 .ui{position:fixed;inset:0;pointer-events:none}
+.ui>.sr{width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .ui>*{position:absolute}
 .brand{color:var(--strong);top:24px;left:24px;display:flex;gap:14px;align-items:center;pointer-events:auto}
 .brand b{display:block;font-size:20px;font-weight:400;color:var(--strong);letter-spacing:.04em}
@@ -112,6 +119,7 @@ a.big:hover{color:var(--accent)}
     <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M20 31V15M20 21c-5 0-7-3-7-7 5 0 7 3 7 7zm0-3c5 0 7-3 7-7-5 0-7 3-7 7z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
     <div><b>Nithin Reddy</b><span>Senior AI Engineer</span></div>
   </a>
+  <h1 class="sr">Nithin Reddy Govindugari, Senior AI Engineer</h1>
   <nav class="nav" id="nav">
     <a href="/" data-route="home">Home</a>
     <a href="/work" data-route="work">Work</a>
@@ -312,7 +320,7 @@ a.big:hover{color:var(--accent)}
     side.className='side'+(p==='home'?' home':'')+(p==='work'||p==='writing'?' wide':'')+(p==='post'?' reader':'');side.scrollTop=0;
     hint.hidden=p!=='home';labels.hidden=p!=='work';
     [].forEach.call(document.querySelectorAll('#nav a'),function(a){a.dataset.route===(p==='post'?'writing':p)?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current')});
-    document.title=p==='home'?'Nithin Reddy':(post?post.t:p.charAt(0).toUpperCase()+p.slice(1))+' · Nithin Reddy';
+    document.title=p==='home'?"Nithin Reddy Govindugari | Senior AI Engineer":(post?post.t:p.charAt(0).toUpperCase()+p.slice(1))+' · Nithin Reddy Govindugari';
     setShape(p==='home'?chap:SHAPE[p]);refit();
   }
   document.addEventListener('click',function(e){
