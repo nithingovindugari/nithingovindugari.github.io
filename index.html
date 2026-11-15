@@ -1,87 +1,286 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nithin Reddy - Full Stack AI Engineer</title>
-    <link rel="stylesheet" href="styles.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nithin Reddy</title>
+<meta name="description" content="Nithin Reddy trains models and builds agents: RL, reward design, evals and data. Projects, articles, papers and links.">
+<meta property="og:title" content="Nithin Reddy">
+<meta property="og:description" content="Nithin Reddy trains models and builds agents: RL, reward design, evals and data. Projects, articles, papers and links.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nithingovindugari.com/">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23000'/%3E%3Ccircle cx='20' cy='20' r='16' fill='none' stroke='%23fff' stroke-width='2.4'/%3E%3Cpath d='M20 30V15M20 21c-5 0-7-3-7-7 5 0 7 3 7 7zm0-3c5 0 7-3 7-7-5 0-7 3-7 7z' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+/* Layout: one black screen that never scrolls. A particle cloud in the middle takes four forms
+   (neural net, chip, atom, robot). Thin monospace UI around it. Single dark look by choice. */
+:root{
+  color-scheme:dark;
+  --bg:#000000; --text:#dedede; --muted:#8a8a8a; --chip:#1a1a1a; --line:#2a2a2a; --accent:#ff9a3c;
+  --mono:"SF Mono","Menlo","Consolas","Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{margin:0;background:var(--bg);color:var(--text);font:13px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.02em}
+canvas#bg{position:fixed;inset:0;width:100%;height:100%;display:block}
+a{color:inherit}
+button{font:inherit;color:inherit;text-transform:inherit;letter-spacing:inherit;background:none;border:0;padding:0;cursor:pointer}
+:focus-visible{outline:1px solid var(--accent);outline-offset:3px}
+p{margin:0}
+.ui{position:fixed;inset:0;pointer-events:none;
+  padding:calc(24px + env(safe-area-inset-top,0px)) max(24px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(24px,env(safe-area-inset-left,0px))}
+.ui>*{position:absolute}
+.brand{top:24px;left:24px;display:flex;gap:14px;align-items:center}
+.brand b{display:block;font-size:20px;font-weight:400;color:#fff;letter-spacing:.04em}
+.brand span{font-size:11px;color:var(--muted)}
+.counter{top:24px;right:24px;width:44px;height:44px;border:1px solid var(--line);border-radius:50%;background:#0a0a0a;display:grid;place-items:center;font-size:14px;color:#fff}
+
+.menu{top:112px;left:24px;pointer-events:auto;background:#e6e6e6;color:#000;padding:8px 14px;font-size:12px;display:flex;gap:18px}
+.menu[aria-expanded="true"]{background:var(--chip);color:#cfcfcf}
+.panel{top:160px;left:24px;bottom:84px;width:320px;overflow-y:auto;scrollbar-width:none;pointer-events:auto;display:none}
+.panel.open{display:block}
+.panel h3{font-size:11px;font-weight:400;color:var(--accent);margin:26px 0 10px}
+.panel h3:first-child{margin-top:0}
+.panel::-webkit-scrollbar{display:none}
+.panel a,.panel div.row{display:block;padding:12px 0;border-top:1px solid var(--line);text-decoration:none}
+.panel b{display:block;font-weight:400;color:#fff;font-size:13px}
+.panel span{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+.panel a:hover b{color:var(--accent)}
+
+.about{right:40px;top:50%;transform:translateY(-50%);width:300px;transition:opacity .35s}
+.about h2{font-size:13px;font-weight:400;color:var(--accent);margin:0 0 1em}
+.about p{font-size:14px;line-height:1.55;color:#f0f0f0;text-transform:none;letter-spacing:0}
+.about small{display:block;margin-top:1.4em;font-size:11px;line-height:1.5;color:var(--muted)}
+.about{text-shadow:0 0 12px #000,0 0 4px #000}
+
+.chapters{left:50%;bottom:24px;transform:translateX(-50%);display:flex;gap:6px;pointer-events:auto;white-space:nowrap}
+.chapters button{padding:8px 12px;font-size:11px;color:var(--muted);border:1px solid var(--line);background:#0a0a0a}
+.chapters button[aria-current="true"]{color:#000;background:var(--accent);border-color:var(--accent)}
+.hint{right:24px;bottom:32px;font-size:11px;color:var(--muted)}
+
+@media (max-width:1100px){.about{right:24px;width:260px}.panel{width:260px}}
+@media (max-width:760px){
+  .menu{top:84px}
+  .panel{top:128px;bottom:auto;max-height:52vh;width:auto;right:24px;background:rgba(0,0,0,.94);border:1px solid var(--line);padding:14px}
+  .about{left:24px;right:24px;top:auto;bottom:84px;width:auto;transform:none}
+  .hint{display:none}
+  .chapters{left:24px;right:24px;transform:none;justify-content:space-between}
+  .chapters button{padding:8px 7px}
+}
+@media (prefers-reduced-motion:reduce){.about{transition:none}}
+</style>
 </head>
 <body>
-    <header>
-        <h1>Nithin Reddy</h1>
-        <p>Full Stack AI Engineer</p>
-    </header>
+<canvas id="bg" aria-hidden="true"></canvas>
 
-    <nav>
-        <ul>
-            <li><a href="#about">About</a></li>
-            <li><a href="#skills">Skills</a></li>
-            <li><a href="#experience">Experience</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
+<div class="ui">
+  <div class="brand">
+    <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18.5" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M20 31V15M20 21c-5 0-7-3-7-7 5 0 7 3 7 7zm0-3c5 0 7-3 7-7-5 0-7 3-7 7z" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    <div><b>Nithin Reddy</b><span>trains models · builds agents</span></div>
+  </div>
+  <div class="counter" id="counter" aria-hidden="true">01</div>
 
-    <main>
-        <section id="about">
-            <h2>About Me</h2>
-            <p>Full stack AI Engineer with 4.5 years experience in building end-to-end scalable Machine learning, Generative AI (Multimodal), Software development, and hardware acceleration in distributed environments. Passionate about advanced technologies and their practical applications.</p>
-        </section>
+  <button class="menu" id="menu" aria-expanded="false" aria-controls="panel">Index <span aria-hidden="true">+</span></button>
+  <div class="panel" id="panel">
+    <h3>Projects</h3>
+    <a href="https://github.com/nithingovindugari/phychip"><b>PhyChip</b><span>RL with a circuit simulator as the reward</span></a>
+    <div class="row"><b>The lab</b><span>An agent that runs experiments in a simulator. Not finished.</span></div>
+    <div class="row"><b>Athma</b><span>A personal AI with memory and voice</span></div>
+    <h3>Earlier projects</h3>
+    <div class="row"><b>Research intern agent</b><span>2026 / plans, runs and writes up ML experiments</span></div>
+    <div class="row"><b>10-K research agent</b><span>2026 / answers finance questions from SQL tables and filings</span></div>
+    <div class="row"><b>VQLS on GPUs</b><span>2024 / quantum linear solver with custom CUDA kernels</span></div>
+    <a href="https://github.com/nithingovindugari/Generative_AI_Recruitment_Co-Pilot"><b>NextGen Recruit</b><span>2024 / hackathon recruiting copilot</span></a>
+    <a href="https://github.com/nithingovindugari/Ecommerce_recommendation_using_GenAI"><b>Product recommender</b><span>2024 / RAG plus a Falcon 7B fine-tune on one T4</span></a>
+    <div class="row"><b>Fixed-point MAC unit</b><span>2023 / multiply-accumulate datapath on an FPGA</span></div>
+    <div class="row"><b>Cryogenic FinFET amplifier</b><span>2023 / 45 nm low-noise amplifier, simulated</span></div>
+    <h3>Articles</h3>
+    <div class="row"><b>A cheap prompt-injection trick that actually works</b><span>21 Jun 2026</span></div>
+    <div class="row"><b>What stops an agent loop going berserk?</b><span>20 Jun 2026</span></div>
+    <div class="row"><b>How /loop actually works</b><span>20 Jun 2026</span></div>
+    <div class="row"><b>A 3B model that reasons like a frontier one</b><span>17 Jun 2026</span></div>
+    <div class="row"><b>The LLM inference bottleneck moved twice</b><span>16 Jun 2026</span></div>
+    <div class="row"><b>Most agentic-RL training loops are silently broken</b><span>14 Jun 2026</span></div>
+    <h3>Papers</h3>
+    <div class="row"><b>FinRAG-12B</b><span>ACL 2026 / grounded answers in banking</span></div>
+    <div class="row"><b>Quantum linear solver for the Poisson equation</b><span>SISPAD 2024 / first author</span></div>
+    <div class="row"><b>Application-oriented quantum benchmarks</b><span>arXiv 2024</span></div>
+    <h3>Code I'm reading</h3>
+    <a href="https://github.com/KellerJordan/modded-nanogpt"><b>modded-nanogpt</b><span>GPT-2 training speedruns</span></a>
+    <a href="https://github.com/gpu-mode/lectures"><b>gpu-mode/lectures</b><span>GPU kernel lectures</span></a>
+    <a href="https://github.com/huggingface/OpenEnv"><b>OpenEnv</b><span>RL post-training environments</span></a>
+    <a href="https://github.com/cleanlab/cleanlab"><b>cleanlab</b><span>Finding bad labels in training data</span></a>
+    <a href="https://github.com/huggingface/lerobot"><b>lerobot</b><span>Robot learning, end to end</span></a>
+    <h3>Links</h3>
+    <a href="https://x.com/NithinRocks17"><b>X -> @NithinRocks17</b><span>Posts and threads</span></a>
+    <a href="https://github.com/nithingovindugari"><b>GitHub -> nithingovindugari</b><span>Code</span></a>
+    <a href="https://huggingface.co/NithinReddyG"><b>Hugging Face -> NithinReddyG</b><span>Models</span></a>
+  </div>
 
-        <section id="skills">
-            <h2>Skills</h2>
-            <ul>
-                <li>Programming Languages: Python, C++, SQL, C, Java</li>
-                <li>AI and Data Science: PyTorch, TensorFlow, ONNX runtime, Jax, XLA, Scikit-learn, NumPy, Pandas, NLTK, SpaCy, Matplotlib, MLOps, MLPerf, BeautifulSoup, W&B, Snowflake, Tableau, CUDA, A/B Testing</li>
-                <li>Generative AI: LangChain, Llama Index, Transformers, PEFT, Ollama, Pinecone, ChromaDB, Crew AI, Autogen</li>
-                <li>Cloud and Operations: AWS, GCP, Azure, Docker, Kubernetes, Postman, Kafka, Spark, Git, Jenkins, JIRA</li>
-                <li>Other Tools: Django, Flask, StreamLit, FastAPI, MySQL, MongoDB, RestAPI, GraphQL, Qiskit, Windows, Linux, Mac OS</li>
-            </ul>
-        </section>
+  <div class="about" id="about" aria-live="polite">
+    <h2 id="ah">[ai]</h2>
+    <p id="ap">I train models and build agents. That covers post-training with RL, reward and grader design, evals, training data, and multi-agent systems in production.</p>
+    <small id="as">ai is the stem. the rest are leaves.</small>
+  </div>
 
-        <section id="experience">
-            <h2>Professional Experience</h2>
-            <div class="job">
-                <h3>Machine Learning Research & Teaching Assistant</h3>
-                <p>San Jose State University | May 2022 – Present</p>
-            </div>
-            <div class="job">
-                <h3>Research Intern</h3>
-                <p>Stanford Research International | May 2023 - Aug 2023</p>
-            </div>
-            <div class="job">
-                <h3>Machine Learning & Software Engineer</h3>
-                <p>Accenture | Dec 2018 – Dec 2021</p>
-            </div>
-        </section>
+  <div class="chapters" id="chapters">
+    <button aria-current="true">AI</button><button>Chips</button><button>Physics</button><button>Robots</button><button>Why?</button>
+  </div>
+  <div class="hint">scroll / move the cursor</div>
+</div>
 
-        <section id="projects">
-            <h2>Featured Projects</h2>
-            <div class="project">
-                <h3>Generative AI Recruitment Co-Pilot</h3>
-                <p>Tech: Python, Llama3, LangChain, Groq, Whisper, Sounddevice, Meet API, Langgraph</p>
-            </div>
-            <div class="project">
-                <h3>Generative AI Multi-Agent Vehicle Damage Analyst</h3>
-                <p>Tech: Python, PyAutoGen, Prompt Engineering, OpenAI, Flask, SQLite, Mailtrap</p>
-            </div>
-            <div class="project">
-                <h3>Generative AI in E-Commerce</h3>
-                <p>Tech: Python, Transformers, Langchain, PyTorch, NLP, LLMs, Pinecone</p>
-            </div>
-        </section>
+<script src="https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.min.js"></script>
+<script>
+(function(){
+  var CH=[
+    ['[ai]','I train models and build agents. That covers post-training with RL, reward and grader design, evals, training data, and multi-agent systems in production.','ai is the stem. the rest are leaves.'],
+    ['[chips]','I have worked on analog circuits, VLSI, FPGA datapaths, device simulation and GPU kernels.','cadence · verilog · tcad · cuda'],
+    ['[physics]','I have published quantum computing research and run quantum algorithms on real hardware. I have also worked on cryogenic devices and quantum benchmarks.','"move with some blur or stay still with false clarity." (me, on x)'],
+    ['[robots]','What is the point of physical and digital intelligence if we can\'t join them?',''],
+    ['[why?]','I read a lot outside AI: physics, history, geopolitics, and biographies of founders and scientists.','"built ai that can write code, make art, and solve problems. still can\'t get it to network for me." (me, on x)']
+  ];
+  var cur=0,lock=0,reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var about=document.getElementById('about'),btns=[].slice.call(document.querySelectorAll('#chapters button')),counter=document.getElementById('counter');
+  var morph=function(){},refit=function(){};
+  function go(i){
+    i=(i+CH.length)%CH.length; if(i===cur)return; var prev=cur; cur=i;
+    btns.forEach(function(b,j){b.setAttribute('aria-current',j===i?'true':'false')});
+    counter.textContent='0'+(i+1);
+    about.style.opacity=0;
+    setTimeout(function(){document.getElementById('ah').textContent=CH[i][0];document.getElementById('ap').textContent=CH[i][1];document.getElementById('as').textContent=CH[i][2];about.style.opacity=1;refit()},reduce?0:300);
+    morph(prev,i);
+  }
+  btns.forEach(function(b,i){b.addEventListener('click',function(){go(i)})});
+  addEventListener('wheel',function(e){
+    if(e.target.closest&&e.target.closest('.panel'))return; e.preventDefault();
+    var n=Date.now(); if(n<lock||Math.abs(e.deltaY)<12)return; lock=n+900; go(cur+(e.deltaY>0?1:-1));
+  },{passive:false});
+  addEventListener('keydown',function(e){
+    if(e.key==='ArrowDown'||e.key==='ArrowRight'||e.key==='PageDown'){go(cur+1)}
+    else if(e.key==='ArrowUp'||e.key==='ArrowLeft'||e.key==='PageUp'){go(cur-1)}
+  });
+  var ty=null;
+  addEventListener('touchstart',function(e){ty=(e.target.closest&&e.target.closest('.panel,.menu,.chapters'))?null:e.touches[0].clientY},{passive:true});
+  addEventListener('touchend',function(e){if(ty===null)return;var d=ty-e.changedTouches[0].clientY;if(Math.abs(d)>50)go(cur+(d>0?1:-1));ty=null},{passive:true});
 
-        <section id="contact">
-            <h2>Contact</h2>
-            <p>Email: nithingovindugari@gmail.com</p>
-            <p>Phone: +1(408)-549-4873</p>
-            <p>LinkedIn: <a href="https://www.linkedin.com/in/nithin_reddy.g">nithin_reddy.g</a></p>
-            <p>GitHub: <a href="https://github.com/nithingovindugari">nithingovindugari</a></p>
-        </section>
-    </main>
+  // one dropdown for everything
+  var menu=document.getElementById('menu'),panel=document.getElementById('panel');
+  menu.addEventListener('click',function(){var o=!panel.classList.contains('open');panel.classList.toggle('open',o);
+    menu.setAttribute('aria-expanded',o?'true':'false');menu.lastElementChild.textContent=o?'-':'+';panel.scrollTop=0;refit()});
+  // ---------- particles ----------
+  if(!window.THREE)return;
+  var cv=document.getElementById('bg'),renderer;
+  try{renderer=new THREE.WebGLRenderer({canvas:cv,antialias:false,alpha:false})}catch(err){return}
+  var small=innerWidth<=760,N=small?30000:90000,dpr=Math.min(devicePixelRatio||1,2);
+  renderer.setPixelRatio(dpr);renderer.setClearColor(0x000000,1);
+  var scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(35,1,0.1,100);cam.position.set(0,0,5.2);
+  var R=Math.random,TAU=Math.PI*2;
+  function j(s){return (R()-.5)*s}
+  function seg(a,b,t){return [a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t]}
+  function shell(c,r){var u=R()*2-1,th=R()*TAU,s=Math.sqrt(1-u*u);return [c[0]+r*s*Math.cos(th),c[1]+r*s*Math.sin(th),c[2]+r*u]}
 
-    <footer>
-        <p>&copy; 2024 Nithin Reddy. All rights reserved.</p>
-    </footer>
+  function net(){ // layered neural network
+    var counts=[4,6,6,3],xs=[-1.25,-.42,.42,1.25],L=counts.map(function(n,i){var a=[];for(var k=0;k<n;k++)a.push([xs[i],(k-(n-1)/2)*.42,0]);return a});
+    return function(){
+      if(R()<.34){var l=L[(R()*4)|0];return shell(l[(R()*l.length)|0],.085)}
+      var i=(R()*3)|0,a=L[i][(R()*L[i].length)|0],b=L[i+1][(R()*L[i+1].length)|0],p=seg(a,b,R());p[2]+=j(.03);p[1]+=j(.012);return p}
+  }
+  function chip(){ // IC package, die and pins
+    var S=.8,D=.42;
+    function rect(h){var t=R()*4|0,u=(R()*2-1)*h;return t===0?[u,h,0]:t===1?[u,-h,0]:t===2?[h,u,0]:[-h,u,0]}
+    return function(){
+      var r=R(),p;
+      if(r<.2)p=rect(S);
+      else if(r<.36)p=rect(D);
+      else if(r<.56){p=[(R()*2-1)*D,(R()*2-1)*D,0];if(R()<.6){p[(R()*2)|0]=Math.round(p[(R()*2)|0]/.105)*.105}}
+      else{var side=R()*4|0,k=((R()*10)|0)-4.5,o=k*.15,t=R(),inner=r<.8; // traces then pins
+        var a=inner?D:S,b=inner?S:S+.3,d=a+(b-a)*t;
+        p=side===0?[o,d,0]:side===1?[o,-d,0]:side===2?[d,o,0]:[-d,o,0]}
+      p[2]=j(inner===false?.02:.05);return p}
+  }
+  function atom(){
+    return function(){
+      if(R()<.14){var q=shell([0,0,0],.17*Math.cbrt(R()));return q}
+      var k=(R()*3)|0,e=R()<.1,a=e?(k*2.1+.6)+j(.09):R()*TAU,rr=1.2+j(e?.07:.012);
+      var x=rr*Math.cos(a),y=rr*Math.sin(a)*.36,z=rr*Math.sin(a)*.93+j(e?.07:.012),c=Math.cos(k*TAU/6*1),s=Math.sin(k*TAU/6*1);
+      if(e){y+=j(.07)}
+      return [x*c-y*s,x*s+y*c,z]}
+  }
+  function robot(){
+    var W=.78,H=.6,Dp=.45;
+    return function(){
+      var r=R(),p;
+      if(r<.34){var ax=(R()*3)|0,u=R()*2-1,s1=R()<.5?1:-1,s2=R()<.5?1:-1;p=ax===0?[u*W,s1*H,s2*Dp]:ax===1?[s1*W,u*H,s2*Dp]:[s1*W,s2*H,u*Dp]}
+      else if(r<.5){var f=(R()*3)|0,a=R()*2-1,b=R()*2-1,sg=R()<.5?1:-1;p=f===0?[a*W,b*H,sg*Dp]:f===1?[sg*W,a*H,b*Dp]:[a*W,sg*H,b*Dp]}
+      else if(r<.76){var sx=R()<.5?1:-1,an=R()*TAU;p=[sx*.34+.2*Math.cos(an),.08+.2*Math.sin(an),Dp+.02]}
+      else if(r<.86){var sx2=R()<.5?1:-1,an2=R()*TAU,rd=.085*Math.sqrt(R());p=[sx2*.34+rd*Math.cos(an2),.08+rd*Math.sin(an2),Dp+.03]}
+      else if(r<.92){var t=R()*2-1;p=[t*.24,-.3-.07*(1-t*t),Dp+.02]}
+      else if(r<.96){p=[(R()<.5?.3:-.3)+j(.012),H+R()*.3,0]}
+      else p=shell([R()<.5?.3:-.3,H+.36,0],.06);
+      return p}
+  }
+  function why(){
+    return function(){
+      var r=R(),p;
+      if(r<.68){var an=(170-250*R())*Math.PI/180;p=[.42*Math.cos(an)+j(.09),.5+.42*Math.sin(an)+j(.09),j(.09)]}
+      else if(r<.84){var t=R();p=[.073*(1-t)+j(.09),.086-.36*t+j(.05),j(.09)]}
+      else{p=shell([0,-.66,0],.12*Math.cbrt(R()))}
+      return p}
+  }
+  var gens=[net(),chip(),atom(),robot(),why()],names=['aA','aB','aC','aD','aE'],geo=new THREE.BufferGeometry();
+  gens.forEach(function(g,k){var arr=new Float32Array(N*3);for(var i=0;i<N;i++){var p=g();arr[i*3]=p[0];arr[i*3+1]=p[1];arr[i*3+2]=p[2]}
+    geo.setAttribute(names[k],new THREE.BufferAttribute(arr,3)); if(k===0)geo.setAttribute('position',new THREE.BufferAttribute(arr,3))});
+  var rnd=new Float32Array(N*4);for(var i=0;i<N*4;i++)rnd[i]=R();geo.setAttribute('aRnd',new THREE.BufferAttribute(rnd,4));
+  var U={uWF:{value:new THREE.Vector4(1,0,0,0)},uWT:{value:new THREE.Vector4(1,0,0,0)},uEF:{value:0},uET:{value:0},uMix:{value:1},uTime:{value:0},uSize:{value:(small?11:13)*dpr},
+    uForce:{value:0},uAspect:{value:1},uMouse:{value:new THREE.Vector2(9,9)},uAccent:{value:new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue('--accent').trim())}};
+  var mat=new THREE.ShaderMaterial({uniforms:U,transparent:true,depthWrite:false,depthTest:false,blending:THREE.AdditiveBlending,
+    vertexShader:[
+    'attribute vec3 aA;attribute vec3 aB;attribute vec3 aC;attribute vec3 aD;attribute vec3 aE;attribute vec4 aRnd;uniform float uEF;uniform float uET;',
+    'uniform vec4 uWF;uniform vec4 uWT;uniform float uMix;uniform float uTime;uniform float uSize;uniform float uForce;uniform float uAspect;uniform vec2 uMouse;',
+    'varying float vAcc;varying float vB;',
+    'vec3 pick(vec4 w,float e){return aA*w.x+aB*w.y+aC*w.z+aD*w.w+aE*e;}',
+    'void main(){',
+    ' float m=clamp(uMix*1.4-aRnd.x*0.4,0.0,1.0);m=m*m*(3.0-2.0*m);',
+    ' vec3 p=mix(pick(uWF,uEF),pick(uWT,uET),m);',
+    ' float burst=sin(m*3.14159);',
+    ' vec3 n=vec3(sin(aRnd.y*40.0+uTime*0.7),cos(aRnd.z*37.0+uTime*0.6),sin(aRnd.w*31.0+uTime*0.5));',
+    ' p+=n*(0.010+burst*0.45*aRnd.w);',
+    ' vec4 mv=modelViewMatrix*vec4(p,1.0);vec4 c=projectionMatrix*mv;',
+    ' vec2 d=c.xy/c.w-uMouse;d.x*=uAspect;float f=exp(-dot(d,d)*16.0)*uForce;',
+    ' vec2 dir=normalize(d+vec2(0.0001));dir.x/=uAspect;c.xy+=dir*f*c.w*0.26*(0.4+aRnd.z);',
+    ' gl_Position=c;gl_PointSize=uSize*(0.55+aRnd.z)/-mv.z;',
+    ' vAcc=step(0.97,aRnd.y);vB=0.3+0.7*aRnd.x;}'].join('\n'),
+    fragmentShader:[
+    'precision mediump float;uniform vec3 uAccent;varying float vAcc;varying float vB;',
+    'void main(){vec2 q=gl_PointCoord-0.5;float r=dot(q,q);if(r>0.25)discard;float a=smoothstep(0.25,0.0,r);',
+    ' vec3 col=mix(vec3(0.72,0.8,1.0)*vB*0.3,uAccent*1.3,vAcc);gl_FragColor=vec4(col*a,1.0);}'].join('\n')});
+  var pts=new THREE.Points(geo,mat);pts.frustumCulled=false;var grp=new THREE.Group();grp.add(pts);scene.add(grp);
+
+  var t0=-1e9,DUR=1700;
+  morph=function(a,b){var w=[0,0,0,0,0];w[a]=1;U.uWF.value.fromArray(w);U.uEF.value=w[4];w=[0,0,0,0,0];w[b]=1;U.uWT.value.fromArray(w);U.uET.value=w[4];if(reduce){U.uMix.value=1}else{U.uMix.value=0;t0=performance.now()}};
+
+  var mx=0,my=0,pmx=0,pmy=0,inside=false,force=0;
+  function ptr(x,y){mx=x/innerWidth*2-1;my=-(y/innerHeight*2-1);inside=true}
+  addEventListener('pointermove',function(e){ptr(e.clientX,e.clientY)},{passive:true});
+  addEventListener('pointerdown',function(e){ptr(e.clientX,e.clientY)},{passive:true});
+  document.addEventListener('pointerleave',function(){inside=false});
+  var K=3.279; // world units visible top to bottom at z=0 (fov 35, camera 5.2 away)
+  function size(){var w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();U.uAspect.value=w/h;
+    small=w<=760;var ppu=h/K,ab=about.getBoundingClientRect(),cx,cy,s;
+    if(small){var top=130,bot=ab.top-16;cx=w/2;cy=(top+bot)/2;s=Math.min((w-32)/(2.75*ppu),(bot-top)/(2.5*ppu))}
+    else{var left=(panel.classList.contains('open')?panel.getBoundingClientRect().right:130)+28,right=ab.left-28;cx=(left+right)/2;cy=h/2-10;s=Math.min((right-left)/(2.75*ppu),(h-190)/(2.5*ppu),1.05)}
+    s=Math.max(.3,s);grp.scale.setScalar(s);grp.position.set((cx-w/2)/ppu,(h/2-cy)/ppu,0)}
+  addEventListener('resize',size);size();refit=size;
+  function frame(now){
+    var t=now/1000;U.uTime.value=reduce?0:t;
+    if(!reduce&&U.uMix.value<1)U.uMix.value=Math.min(1,(now-t0)/DUR);
+    var sp=Math.hypot(mx-pmx,my-pmy);pmx=mx;pmy=my;
+    force+=((inside?Math.min(1,.22+sp*30):0)-force)*.08;U.uForce.value=force;U.uMouse.value.set(mx,my);
+    var ry=(reduce?0:Math.sin(t*.35)*.45)+mx*.35,rx=(cur===1?-.75:cur===2?.25:.05)+(-my*.2);
+    grp.rotation.y+=(ry-grp.rotation.y)*.06;grp.rotation.x+=(rx-grp.rotation.x)*.06;
+    renderer.render(scene,cam);requestAnimationFrame(frame)}
+  requestAnimationFrame(frame);
+})();
+</script>
 </body>
 </html>
